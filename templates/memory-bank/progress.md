@@ -1,10 +1,10 @@
 # Progress
 
 ## Completed
-- [YYYY-MM-DD] [Completed item]
+[Pre-existing work identified from project scan]
 
 ## In Progress
-- [Current work item]
+[Current work items identified from project state]
 
 ## Known Issues
-- [None yet]
+[None identified yet]

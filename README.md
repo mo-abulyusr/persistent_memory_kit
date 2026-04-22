@@ -1,56 +1,23 @@
 # Memory Bank
 
-Memory Bank is a simple file-based memory system for projects that need context to survive across sessions, handoffs, and long pauses.
+Memory Bank is a persistent-memory protocol for coding agents. It gives every new session a durable place to find project context, current focus, decisions, and progress so work survives across sessions, handoffs, and long pauses.
 
----
+## Why It Exists
 
-## What It Is
+Agent sessions reset. Projects do not.
 
-Memory Bank stores the important project context in a `memory-bank/` folder at the project root.
+Memory Bank exists so the next agent can answer, quickly and consistently:
+- What is this project?
+- What matters right now?
+- What has already been decided?
+- What changed recently?
+- What should happen next?
 
-It gives every new session the same starting point:
-- what the project is
-- what it is for
-- what was decided
-- what is in progress
-- what should happen next
+The goal is not "take more notes." The goal is to make ongoing work survivable across resets, handoffs, and long gaps.
 
----
+## What You Install
 
-## What It Is For
-
-Use it when work needs to stay clear over time.
-
-It helps with:
-- keeping project goals in one place
-- preserving current state between sessions
-- recording durable decisions and why they were made
-- making handoffs easier for the next agent or contributor
-
----
-
-## How It Works
-
-The workflow is intentionally small:
-
-1. Look for `memory-bank/` at the project root.
-2. If it does not exist, create it from `templates/memory-bank/`.
-3. If it exists, read `projectbrief.md` and `activecontext.md` first.
-4. Read `decisionlog.md` when a choice needs context.
-5. Read `progress.md` when you need the recent timeline.
-6. Update the right file as work happens.
-
-That keeps the flow steady:
-- `projectbrief.md` holds the stable project foundation
-- `activecontext.md` holds the current state
-- `decisionlog.md` holds durable decisions
-- `progress.md` holds progress and next steps
-
----
-
-## What Is Inside
-
-This repo ships one installable template:
+This repo ships one installable template set:
 
 ```text
 templates/
@@ -62,14 +29,24 @@ templates/
     progress.md
 ```
 
-File roles:
-- `AGENTS.md` - tells the agent when to create the folder, what to read first, and what to update
-- `projectbrief.md` - project purpose, structure, constraints, conventions
-- `activecontext.md` - shared notes and per-workstream current state
-- `decisionlog.md` - durable decisions with rationale
-- `progress.md` - completed work, active work, known issues
+`templates/AGENTS.md` is the full operational rule, not a summary. It tells the agent how to bootstrap Memory Bank, what to read first, when to update memory, and how to compact it as the project evolves.
 
----
+The four memory files have distinct roles:
+- `projectbrief.md` - stable project purpose, structure, constraints, conventions
+- `activecontext.md` - current focus, blockers, and next steps, organized by workstream
+- `decisionlog.md` - durable decisions and rationale
+- `progress.md` - completed work, in-progress work, known issues
+
+## Protocol At A Glance
+
+1. Start every session by checking for `memory-bank/`.
+2. If it does not exist, bootstrap it from the provided templates.
+3. Always read `projectbrief.md` and `activecontext.md` before doing work.
+4. Read `decisionlog.md` and `progress.md` whenever the task touches decisions, planning, or recent status.
+5. Update the relevant memory files silently after meaningful progress.
+6. Compact the files when they exceed the rule's size budgets.
+
+This keeps the system useful instead of turning it into a forgotten notes folder.
 
 ## How To Use It
 
@@ -81,22 +58,42 @@ git clone https://github.com/mo-abulyusr/memory-bank.git /tmp/memory-bank \
   && rm -rf /tmp/memory-bank
 ```
 
-That gives the project a root `AGENTS.md` file and a `memory-bank/` folder.
+That gives the project:
+- a root `AGENTS.md` with the full Memory Bank protocol
+- a `memory-bank/` folder with the four durable context files
 
-Then open `memory-bank/projectbrief.md`, fill in the project facts, and keep the other files current as work changes.
+Then:
+1. Fill in `memory-bank/projectbrief.md` with real project facts.
+2. Let agents keep `activecontext.md`, `decisionlog.md`, and `progress.md` current as work changes.
+3. Keep the folder in the project root so future sessions can pick up where the last one left off.
 
-Recommended reading order at the start of work:
-1. `projectbrief.md`
-2. `activecontext.md`
-3. `decisionlog.md` when decisions matter
-4. `progress.md` when status matters
+## What Makes This Different
 
----
+Memory Bank is opinionated on purpose:
+- agents read context before they act
+- agents update memory continuously, not just at the end
+- `activecontext.md` is multi-agent aware
+- structure maps must be specific enough that an agent can find code without re-scanning the repo
+- the system includes compaction rules so the files stay useful as they grow
 
-## Notes
+That is the difference between "some markdown notes" and a durable working memory.
 
-- Keep paths relative.
-- Keep entries short.
-- Use the `Shared` section for cross-cutting blockers.
-- Update only your own section in `activecontext.md`.
-- Store no secrets.
+## Source Of Truth
+
+This repo keeps two forms of the rule:
+- `memory-bank-full-rule/memory-bank.mdc` - source/reference copy of the full rule
+- `templates/AGENTS.md` - installable AGENTS-friendly version of that same rule
+- `templates/memory-bank/*.md` - bootstrap templates expected by the rule
+
+If you update the rule, keep those surfaces aligned.
+
+## Writing Rules
+
+Memory Bank entries should stay:
+- telegraphic
+- factual
+- one fact per line
+- path-first instead of code-heavy
+- free of secrets
+
+If a note does not help the next session move faster, it probably does not belong in Memory Bank.

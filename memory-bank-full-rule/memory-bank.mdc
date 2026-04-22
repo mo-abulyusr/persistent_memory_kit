@@ -1,3 +1,8 @@
+---
+description: "Memory Bank - Persistent project memory system that maintains context across agent sessions"
+alwaysApply: true
+---
+
 # Memory Bank System
 
 You have a **Memory Bank** stored in `memory-bank/` at the project root. This is your long-term memory that persists across sessions. You MUST follow this protocol.
